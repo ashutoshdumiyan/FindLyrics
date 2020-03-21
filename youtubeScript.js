@@ -1,33 +1,43 @@
 if (window.alreadyDone === undefined) {
   // To prevent multiple injections of the script
   window.alreadyDone = true;
-  const links = document.querySelector(
-    ".watch-extras-section li.watch-meta-item.yt-uix-expander-body a"
-  );
-  if (links.innerHTML == "Music" || links.innerHTML == "Entertainment") {
-    let title = document.querySelector("#eow-title").innerHTML;
-    const b1 = title.indexOf("(");
-    const b2 = title.indexOf(")");
-    if (b1 !== -1 && b2 !== -1) {
-      const substr = title.substring(b1, b2);
-      title = title.replace(substr, " ");
-    }
-    const a1 = title.indexOf("[");
-    const a2 = title.indexOf("]");
-    if (a1 !== -1 && a2 !== -1) {
-      const substr2 = title.substring(a1, a2);
-      title = title.replace(substr2, " ");
-    }
-    title = title.trim();
-    fetch("https://api.genius.com/search?q=" + title, {
-      method: "GET",
-      headers: {
-        Authorization:
-          "Bearer UROwru04fs-E8ILKgbRvMYt-UPsrunKpp_jHsKDbK5czuX13tSsHuYoP_3m5TOJU"
+  chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+    console.log(request);
+    const links = document.querySelector(
+      ".watch-extras-section li.watch-meta-item.yt-uix-expander-body a"
+    );
+    let titleTag = document.querySelector("#eow-title");
+    if (titleTag === null) {
+      sendResponse({ error: "Song not playing" });
+    } else {
+      let title = titleTag.textContent;
+      // / *([^)]*) */g
+      title = title.replace(/ *\([^)]*\) */g, " ");
+      title = title.replace(/ *\[[^)]*\] */g, " ");
+      title = title.replace("HQ", " ");
+      title = title.replace("HD", " ");
+      title = title.trim();
+      title = title.toLowerCase();
+      let arr = title.split(" - ");
+      arr.forEach((val, ind) => {
+        if (val.indexOf("ft.") !== -1) {
+          arr[ind] = val.substring(0, val.indexOf("ft.")).trim();
+        } else if (val.indexOf("feat.") !== -1) {
+          arr[ind] = val.substring(0, val.indexOf("feat.")).trim();
+        }
+      });
+      let artist, song, mode;
+      if (arr.length === 1) {
+        artist = document.querySelector(".yt-user-info a").textContent;
+        song = arr[0];
+        mode = "channel";
+      } else {
+        artist = arr[0];
+        song = arr[1];
+        mode = "title";
       }
-    }).then(result => {
-      console.log(result);
-    });
-  } else {
-  }
+      console.log(artist, song);
+      sendResponse({ artist: artist, song: song, mode: mode });
+    }
+  });
 }
