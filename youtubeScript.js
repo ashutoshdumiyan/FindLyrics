@@ -14,10 +14,15 @@ if (window.alreadyDone === undefined) {
       // / *([^)]*) */g
       title = title.replace(/ *\([^)]*\) */g, " ");
       title = title.replace(/ *\[[^)]*\] */g, " ");
-      title = title.replace("HQ", " ");
-      title = title.replace("HD", " ");
-      title = title.trim();
       title = title.toLowerCase();
+      title = title.replace("hq", " ");
+      title = title.replace("hd", " ");
+      title = title.replace("instrumental", "");
+      title = title.replace("lyrics", "");
+      title = title.replace("lyrical", "");
+      title = title.replace("lyric", "");
+      title = title.replace("video", "");
+      title = title.trim();
       let arr, arr2;
       let touse = 1;
       if (title.indexOf("-") !== -1) {

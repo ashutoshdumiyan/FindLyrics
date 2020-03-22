@@ -137,7 +137,20 @@ chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
         }
       });
     });
+  } else if (tabs[0].url.indexOf("open.spotify.com") !== -1) {
+    chrome.tabs.executeScript({
+      file: "spotifyScript.js"
+    });
+    chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
+      chrome.tabs.sendMessage(tabs[0].id, { data: "added script" }, function(
+        response
+      ) {
+        console.log(response);
+      });
+    });
   } else {
+    // This else statement means that current site is not supported.
+    // Supported sites are included in if else statements above this.
     loading.style.display = "none";
     not_playing.style.display = "block";
     not_playing.innerHTML = "Please open a supported site.";
