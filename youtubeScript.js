@@ -77,6 +77,19 @@ if (window.alreadyDone === undefined) {
           second: { artist2: artist2, song2: song2, mode2: mode2 },
           touse: touse
         });
+      } else {
+        sendResponse({
+          first: {
+            artist: document
+              .querySelector(".yt-user-info a")
+              .textContent.toLowerCase()
+              .replace("music", "")
+              .replace(" - topic", ""),
+            song: title,
+            mode: "channel"
+          },
+          touse: 1
+        });
       }
     }
   });
