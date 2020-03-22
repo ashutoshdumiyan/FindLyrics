@@ -2,6 +2,9 @@ const key = "9Ozd2rgtgDcGwaUGh9zrk7J6dPc2eRnQ0sk0Qs8uRg8YQldEWXbDuZ9rtzFzHTIF"; 
 const playing = document.querySelector(".playing");
 const loading = document.querySelector("#loading");
 const not_playing = document.querySelector(".not_playing");
+const artist = document.querySelector(".artist");
+const song = document.querySelector(".song");
+const match = document.querySelector(".match");
 chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
   //   console.log(tabs[0].url);
   if (tabs[0].url.indexOf("youtube.com") !== -1) {
@@ -15,6 +18,10 @@ chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
         console.log(response);
         if (response.error) {
           console.log("Song not playing");
+          loading.style.display = "none";
+          not_playing.style.display = "block";
+          not_playing.innerHTML = "Please play a song to continue.";
+          not_playing.style.fontSize = "1.15rem";
         } else if (response.touse == 1) {
           axios
             .get(
@@ -27,7 +34,17 @@ chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
                 console.log("Lyrics found");
                 console.log(result.data.result.track.text);
                 loading.style.display = "none";
-                playing.innerHTML = result.data.result.track.text;
+                const textnode = document.createTextNode(
+                  result.data.result.track.text
+                ); // Create a text node
+                playing.appendChild(textnode);
+                // playing.innerHTML = result.data.result.track.text;
+                artist.innerHTML =
+                  "Artist -> " + result.data.result.artist.name;
+                song.innerHTML = "Song -> " + result.data.result.track.name;
+                match.innerHTML =
+                  "Match(%) -> " +
+                  (result.data.result.similarity * 100).toFixed(2);
               } else {
                 console.log("Some error occurred. Try again.");
               }
@@ -41,7 +58,17 @@ chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
                 .then(result => {
                   console.log(result);
                   loading.style.display = "none";
-                  playing.innerHTML = result.data.result.track.text;
+                  const textnode = document.createTextNode(
+                    result.data.result.track.text
+                  ); // Create a text node
+                  playing.appendChild(textnode);
+                  // playing.innerHTML = result.data.result.track.text;
+                  artist.innerHTML =
+                    "Artist -> " + result.data.result.artist.name;
+                  song.innerHTML = "Song -> " + result.data.result.track.name;
+                  match.innerHTML =
+                    "Match(%) -> " +
+                    (result.data.result.similarity * 100).toFixed(2);
                 })
                 .catch(err => {
                   console.log("Not found in retry");
@@ -63,7 +90,17 @@ chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
                 console.log("Lyrics found");
                 console.log(result.data.result);
                 loading.style.display = "none";
-                playing.innerHTML = result.data.result.track.text;
+                const textnode = document.createTextNode(
+                  result.data.result.track.text
+                ); // Create a text node
+                playing.appendChild(textnode);
+                // playing.innerHTML = result.data.result.track.text;
+                artist.innerHTML =
+                  "Artist -> " + result.data.result.artist.name;
+                song.innerHTML = "Song -> " + result.data.result.track.name;
+                match.innerHTML =
+                  "Match(%) -> " +
+                  (result.data.result.similarity * 100).toFixed(2);
               } else {
                 console.log("Some error occurred. Try again.");
               }
@@ -77,7 +114,17 @@ chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
                 .then(result => {
                   console.log(result);
                   loading.style.display = "none";
-                  playing.innerHTML = result.data.result.track.text;
+                  const textnode = document.createTextNode(
+                    result.data.result.track.text
+                  ); // Create a text node
+                  playing.appendChild(textnode);
+                  // playing.innerHTML = result.data.result.track.text;
+                  artist.innerHTML =
+                    "Artist -> " + result.data.result.artist.name;
+                  song.innerHTML = "Song -> " + result.data.result.track.name;
+                  match.innerHTML =
+                    "Match(%) -> " +
+                    (result.data.result.similarity * 100).toFixed(2);
                 })
                 .catch(err => {
                   console.log("Not found in retry");

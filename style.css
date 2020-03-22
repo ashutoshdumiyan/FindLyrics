@@ -12,7 +12,11 @@ body {
 }
 
 .playing {
-  white-space: pre-wrap;
+  white-space: pre-line;
+}
+
+.playing span {
+  font-size: medium;
 }
 
 h1 {
