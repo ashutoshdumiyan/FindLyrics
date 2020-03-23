@@ -146,6 +146,90 @@ chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
         response
       ) {
         console.log(response);
+        if (response.artistNames.length > 1) {
+          const firstArtist = response.artistNames[0];
+          const secondArtist = response.artistNames[1];
+          axios
+            .get(
+              `https://orion.apiseeds.com/api/music/lyric/${firstArtist}/${response.songName}?apikey=${key}`
+            )
+            .then(result => {
+              if (result.status == 404) {
+                console.log("Lyrics not found");
+              } else if (result.status == 200) {
+                // console.log("Lyrics found");
+                console.log(result.data.result.track.text);
+                loading.style.display = "none";
+                const textnode = document.createTextNode(
+                  result.data.result.track.text
+                ); // Create a text node
+                playing.appendChild(textnode);
+                // playing.innerHTML = result.data.result.track.text;
+                artist.innerHTML =
+                  "Artist -> " + result.data.result.artist.name;
+                song.innerHTML = "Song -> " + result.data.result.track.name;
+                match.innerHTML =
+                  "Match(%) -> " +
+                  (result.data.result.similarity * 100).toFixed(2);
+              } else {
+                console.log("Some error occurred. Try again.");
+              }
+            })
+            .catch(err => {
+              axios
+                .get(
+                  `https://orion.apiseeds.com/api/music/lyric/${secondArtist}/${response.songName}?apikey=${key}`
+                )
+                .then(result => {
+                  // console.log(result);
+                  loading.style.display = "none";
+                  const textnode = document.createTextNode(
+                    result.data.result.track.text
+                  ); // Create a text node
+                  playing.appendChild(textnode);
+                  // playing.innerHTML = result.data.result.track.text;
+                  artist.innerHTML =
+                    "Artist -> " + result.data.result.artist.name;
+                  song.innerHTML = "Song -> " + result.data.result.track.name;
+                  match.innerHTML =
+                    "Match(%) -> " +
+                    (result.data.result.similarity * 100).toFixed(2);
+                })
+                .catch(err => {
+                  console.log("Not found in retry");
+                  loading.style.display = "none";
+                  not_playing.style.display = "block";
+                  not_playing.innerHTML = "Lyrics not found.";
+                  not_playing.style.fontSize = "1.15rem";
+                });
+            });
+        } else {
+          axios
+            .get(
+              `https://orion.apiseeds.com/api/music/lyric/${response.artistNames[0]}/${response.songName}?apikey=${key}`
+            )
+            .then(result => {
+              // console.log(result);
+              loading.style.display = "none";
+              const textnode = document.createTextNode(
+                result.data.result.track.text
+              ); // Create a text node
+              playing.appendChild(textnode);
+              // playing.innerHTML = result.data.result.track.text;
+              artist.innerHTML = "Artist -> " + result.data.result.artist.name;
+              song.innerHTML = "Song -> " + result.data.result.track.name;
+              match.innerHTML =
+                "Match(%) -> " +
+                (result.data.result.similarity * 100).toFixed(2);
+            })
+            .catch(err => {
+              console.log("Lyrics not found");
+              loading.style.display = "none";
+              not_playing.style.display = "block";
+              not_playing.innerHTML = "Lyrics not found.";
+              not_playing.style.fontSize = "1.15rem";
+            });
+        }
       });
     });
   } else {

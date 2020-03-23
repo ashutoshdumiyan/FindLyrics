@@ -16,7 +16,6 @@ if (window.alreadyDone === undefined) {
         artistNames.push(name);
       }
     });
-    console.log(artistNames);
     sendResponse({ artistNames: artistNames, songName: songName });
   });
 }
