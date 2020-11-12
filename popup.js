@@ -1,4 +1,4 @@
-const key = "9Ozd2rgtgDcGwaUGh9zrk7J6dPc2eRnQ0sk0Qs8uRg8YQldEWXbDuZ9rtzFzHTIF"; //apiseeds
+const key = "ENTER_YOUR_API_KEY"; //apiseeds
 const playing = document.querySelector(".playing");
 const loading = document.querySelector("#loading");
 const not_playing = document.querySelector(".not_playing");
